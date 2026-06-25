@@ -110,3 +110,46 @@ function trocarTema(){
         btn.textContent = "🌙 Escuro";
     }
 }
+
+function criarFlashcard(){
+
+    const pergunta =
+    document.getElementById("pergunta").value;
+
+    const resposta =
+    document.getElementById("resposta").value;
+
+    if(pergunta === "" || resposta === ""){
+        return;
+    }
+
+    const card =
+    document.createElement("div");
+
+    card.classList.add("card");
+
+    card.innerHTML = `
+        <h4>${pergunta}</h4>
+        <p class="resposta">${resposta}</p>
+    `;
+
+    card.addEventListener("click", () => {
+
+        const resp =
+        card.querySelector(".resposta");
+
+        if(resp.style.display === "block"){
+            resp.style.display = "none";
+        }else{
+            resp.style.display = "block";
+        }
+
+    });
+
+    document
+    .getElementById("areaFlashcards")
+    .appendChild(card);
+
+    document.getElementById("pergunta").value="";
+    document.getElementById("resposta").value="";
+}
