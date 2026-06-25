@@ -1,55 +1,103 @@
-let concluidas = 0;
+let tempo = 1500;
+let intervalo;
 
-function adicionarTarefa(){
+const frases = [
+"Pequenos passos levam longe.",
+"Estude hoje para agradecer amanhã.",
+"Consistência vence talento.",
+"Cada página lida é progresso.",
+"Você está mais perto do que ontem."
+];
 
-    const input = document.getElementById("tarefa");
-    const texto = input.value.trim();
+document.getElementById("frase").textContent =
+frases[Math.floor(Math.random()*frases.length)];
 
-    if(texto === ""){
-        alert("Digite uma tarefa!");
-        return;
-    }
+function atualizarTimer(){
 
-    const lista = document.getElementById("lista");
+let min = Math.floor(tempo/60);
+let seg = tempo%60;
 
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-        <span>${texto}</span>
-
-        <div class="botoes">
-            <button class="concluir">✓</button>
-            <button class="excluir">✕</button>
-        </div>
-    `;
-
-    const btnConcluir = li.querySelector(".concluir");
-    const btnExcluir = li.querySelector(".excluir");
-    const span = li.querySelector("span");
-
-    btnConcluir.addEventListener("click", () => {
-
-        if(!span.classList.contains("concluida")){
-            span.classList.add("concluida");
-            concluidas++;
-            atualizarContador();
-        }
-
-    });
-
-    btnExcluir.addEventListener("click", () => {
-        li.remove();
-    });
-
-    lista.appendChild(li);
-
-    input.value = "";
+document.getElementById("timer").textContent =
+`${String(min).padStart(2,"0")}:${String(seg).padStart(2,"0")}`;
 }
 
-function atualizarContador(){
-    document.getElementById("contador").textContent =
-    `Concluídas: ${concluidas}`;
+function iniciar(){
+
+if(intervalo) return;
+
+intervalo = setInterval(()=>{
+
+tempo--;
+
+atualizarTimer();
+
+if(tempo<=0){
+clearInterval(intervalo);
+alert("Pomodoro concluído!");
 }
+
+},1000);
+}
+
+function resetar(){
+clearInterval(intervalo);
+intervalo=null;
+tempo=1500;
+atualizarTimer();
+}
+
+let total=0;
+let feitas=0;
+
+function adicionar(){
+
+const texto =
+document.getElementById("tarefa").value;
+
+if(texto==="") return;
+
+const li = document.createElement("li");
+
+li.innerHTML=`
+<span>${texto}</span>
+<button>✓</button>
+`;
+
+const btn = li.querySelector("button");
+
+btn.onclick=()=>{
+
+if(!li.classList.contains("concluida")){
+li.classList.add("concluida");
+feitas++;
+atualizarProgresso();
+}
+};
+
+document.getElementById("lista")
+.appendChild(li);
+
+total++;
+
+atualizarProgresso();
+
+document.getElementById("tarefa").value="";
+}
+
+function atualizarProgresso(){
+
+let porcentagem =
+total===0 ? 0 :
+Math.round((feitas/total)*100);
+
+document.getElementById("preenchimento")
+.style.width = porcentagem+"%";
+
+document.getElementById("porcentagem")
+.textContent = porcentagem+"%";
+}
+
+atualizarTimer();
 
 function trocarTema(){
     document.body.classList.toggle("escuro");

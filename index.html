@@ -15,16 +15,34 @@
     </button>
     <h1>📚 EstudeJá</h1>
 
-    <div class="input-area">
-        <input type="text" id="tarefa" placeholder="Digite uma tarefa...">
-        <button onclick="adicionarTarefa()">Adicionar</button>
+</div>
+    <br>
+    <div class="pomodoro">
+    <h2 id="timer">25:00</h2>
+    <button onclick="iniciar()">Iniciar</button>
+    <button onclick="resetar()">Resetar</button>
     </div>
 
-    <p id="contador">Concluídas: 0</p>
-
+    <br>
+    
+    <div class="tarefas">
+    
+    <input type="text" id="tarefa" placeholder="Nova tarefa">
+    <button onclick="adicionar()">Adicionar</button>
+    
     <ul id="lista"></ul>
+    
+    </div>
 
-</div>
+    <div class="progresso">
+    <h3>Progresso</h3>
+    <div class="barra">
+    <div id="preenchimento"></div>
+    </div>
+    <p id="porcentagem">0%</p>
+    </div>
+    
+    <p id="frase"></p>
     
     <script src="script.js" defer> </script>
 </body>
