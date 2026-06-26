@@ -1,5 +1,6 @@
 let tempo = 1500;
-let intervalo;
+let tempoInicial = 1500;
+let intervalo = null;
 
 const frases = [
 "Pequenos passos levam longe.",
@@ -23,31 +24,68 @@ document.getElementById("timer").textContent =
 
 function iniciar(){
 
-if(intervalo) return;
+    if(intervalo != null) return;
 
-intervalo = setInterval(()=>{
+    intervalo = setInterval(() => {
 
-tempo--;
+        tempo--;
 
-atualizarTimer();
+        atualizarTimer();
 
-if(tempo<=0){
-clearInterval(intervalo);
-alert("Pomodoro concluído!");
+        if(tempo <= 0){
+
+            clearInterval(intervalo);
+            intervalo = null;
+
+            alert("Tempo encerrado!");
+
+        }
+
+    },1000);
+
 }
 
-},1000);
+function pausar(){
+
+    clearInterval(intervalo);
+    intervalo = null;
+
 }
 
 function resetar(){
-clearInterval(intervalo);
-intervalo=null;
-tempo=1500;
-atualizarTimer();
+
+    clearInterval(intervalo);
+    intervalo = null;
+
+    tempo = tempoInicial;
+
+    atualizarTimer();
+
 }
 
-let total=0;
-let feitas=0;
+function modo2510(){
+
+    clearInterval(intervalo);
+    intervalo = null;
+
+    tempoInicial = 25 * 60;
+    tempo = tempoInicial;
+
+    atualizarTimer();
+
+}
+
+function modo5010(){
+
+    clearInterval(intervalo);
+    intervalo = null;
+
+    tempoInicial = 50 * 60;
+    tempo = tempoInicial;
+
+    atualizarTimer();
+
+}
 
 function adicionar(){
 
@@ -99,18 +137,6 @@ document.getElementById("porcentagem")
 
 atualizarTimer();
 
-function trocarTema(){
-    document.body.classList.toggle("escuro");
-
-    let btn = document.getElementById("temaBtn");
-
-    if(document.body.classList.contains("escuro")){
-        btn.textContent = "☀️ Claro";
-    }else{
-        btn.textContent = "🌙 Escuro";
-    }
-}
-
 function criarFlashcard(){
 
     const pergunta =
@@ -152,4 +178,16 @@ function criarFlashcard(){
 
     document.getElementById("pergunta").value="";
     document.getElementById("resposta").value="";
+}
+
+function trocarTema(){
+    document.body.classList.toggle("escuro");
+
+    let btn = document.getElementById("temaBtn");
+
+    if(document.body.classList.contains("escuro")){
+        btn.textContent = "☀️ Claro";
+    }else{
+        btn.textContent = "🌙 Escuro";
+    }
 }

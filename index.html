@@ -14,17 +14,23 @@
         🌙
     </button>
     <h1>📚 EstudeJá</h1>
-    <p> Uma maneira simples de organizar os estudos/tarefas que você possui</p>
 
-</div>
-    <br>
+    <p id="frase"></p>
+
     <div class="pomodoro">
-    <h2 id="timer">25:00</h2>
-    <button onclick="iniciar()">Iniciar</button>
-    <button onclick="resetar()">Resetar</button>
-    </div>
 
-    <br>
+        <h2 id="timer">25:00</h2>
+    
+        <button onclick="iniciar()">Iniciar</button>
+        <button onclick="pausar()">Pausar</button>
+        <button onclick="resetar()">Resetar</button>
+    
+        <br><br>
+    
+        <button onclick="modo2510()">25/5</button>
+        <button onclick="modo5010()">50/10</button>
+    
+    </div>
     
     <div class="tarefas">
     
@@ -42,8 +48,6 @@
     </div>
     <p id="porcentagem">0%</p>
     </div>
-    
-    <p id="frase"></p>
 
     <div class="flashcards">
 
@@ -59,6 +63,8 @@
         <div id="areaFlashcards"></div>
         
         </div>
+
+        <p> Uma maneira simples de organizar os estudos/tarefas que você possui © </p>
     
     <script src="script.js" defer> </script>
 </body>
