@@ -1,6 +1,7 @@
 let tempo = 1500;
 let tempoInicial = 1500;
 let intervalo = null;
+let pausado = false;
 
 const frases = [
 "Pequenos passos levam longe.",
@@ -26,6 +27,9 @@ function iniciar(){
 
     if(intervalo != null) return;
 
+    pausado = false;
+    document.getElementById("btnPausar").textContent = "Pausar";
+
     intervalo = setInterval(() => {
 
         tempo--;
@@ -47,8 +51,24 @@ function iniciar(){
 
 function pausar(){
 
-    clearInterval(intervalo);
-    intervalo = null;
+    const botao = document.getElementById("btnPausar");
+
+    if(!pausado){
+
+        clearInterval(intervalo);
+        intervalo = null;
+
+        pausado = true;
+        botao.textContent = "Continuar";
+
+    }else{
+
+        iniciar();
+
+        pausado = false;
+        botao.textContent = "Pausar";
+
+    }
 
 }
 
@@ -58,6 +78,9 @@ function resetar(){
     intervalo = null;
 
     tempo = tempoInicial;
+    pausado = false;
+
+    document.getElementById("btnPausar").textContent = "Pausar";
 
     atualizarTimer();
 
@@ -124,18 +147,34 @@ document.getElementById("tarefa").value="";
 
 function atualizarProgresso(){
 
-let porcentagem =
-total===0 ? 0 :
-Math.round((feitas/total)*100);
+    let porcentagem = 0;
 
-document.getElementById("preenchimento")
-.style.width = porcentagem+"%";
+    if(total > 0){
+        porcentagem = (feitas / total) * 100;
+    }
 
-document.getElementById("porcentagem")
-.textContent = porcentagem+"%";
+    document.getElementById("preenchimento").style.width =
+    porcentagem + "%";
+
+    document.getElementById("porcentagem").textContent =
+    Math.round(porcentagem) + "%";
 }
 
-atualizarTimer();
+btn.onclick = () => {
+
+    if(!li.classList.contains("concluida")){
+
+        li.classList.add("concluida");
+
+        feitas++;
+
+        atualizarProgresso();
+    }
+
+}
+
+total++;
+atualizarProgresso();
 
 function criarFlashcard(){
 
@@ -180,14 +219,50 @@ function criarFlashcard(){
     document.getElementById("resposta").value="";
 }
 
-function trocarTema(){
-    document.body.classList.toggle("escuro");
+const botaoTema = document.getElementById("tema");
 
-    let btn = document.getElementById("temaBtn");
+botaoTema.addEventListener("click", ()=>{
 
-    if(document.body.classList.contains("escuro")){
-        btn.textContent = "☀️ Claro";
+    document.body.classList.toggle("dark");
+
+    if(document.body.classList.contains("dark")){
+
+        botaoTema.textContent="☀️";
+
     }else{
-        btn.textContent = "🌙 Escuro";
+
+        botaoTema.textContent="🌙";
+
     }
+
+});
+
+let tarefas = [];
+
+function salvar(){
+
+    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
+}
+
+tarefas.push({
+    texto: texto,
+    concluida: false
+});
+
+
+salvar();
+
+window.onload = function(){
+
+    let dados = localStorage.getItem("tarefas");
+
+    if(dados){
+
+        tarefas = JSON.parse(dados);
+
+        tarefas.forEach(criarTarefa);
+
+    }
+
 }

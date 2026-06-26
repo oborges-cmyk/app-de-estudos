@@ -11,6 +11,11 @@
     display:flex;
     justify-content:center;
     align-items:center;
+    transition:.4s;
+    }
+    
+    body.dark{
+        background:#181818;
     }
     
     .app{
@@ -21,12 +26,38 @@
     box-shadow:0 0 20px rgba(0,0,0,.2);
     display:flex;
     flex-direction:column;
+    color:black;
+    transition:.4s;
     
-    h1{
-    text-align:center;
-    margin-bottom:20px;
+    body.dark .app{
+        background:#2b2b2b;
+        color:white;
     }
     
+    body.dark input{
+
+        background:#3b3b3b;
+        color:white;
+        border:1px solid #555;
+    
+    }
+
+    h1{
+        text-align:center;
+        margin-bottom:20px;
+        }
+
+        body.dark button{
+
+            background:#4f7cff;
+            color:white;
+        
+        }
+
+body.dark .barra{
+    background:#666;
+}
+
     .pomodoro{
     text-align:center;
     margin-bottom:25px;
@@ -86,7 +117,7 @@
     width:0%;
     background:#22c55e;
     transition:.4s;
-    }
+    
     
     #frase{
     margin-top:20px;
