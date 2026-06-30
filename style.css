@@ -28,6 +28,7 @@
     flex-direction:column;
     color:black;
     transition:.4s;
+       }
     
     body.dark .app{
         background:#2b2b2b;

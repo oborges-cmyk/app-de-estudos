@@ -2,13 +2,15 @@ let tempo = 1500;
 let tempoInicial = 1500;
 let intervalo = null;
 let pausado = false;
+let xp = Number(localStorage.getItem("xp")) || 0;
 
 const frases = [
 "Pequenos passos levam longe.",
 "Estude hoje para agradecer amanhã.",
 "Consistência vence talento.",
 "Cada página lida é progresso.",
-"Você está mais perto do que ontem."
+"Você está mais perto do que ontem.",
+'JUST DO IT'
 ];
 
 document.getElementById("frase").textContent =
@@ -219,6 +221,8 @@ function criarFlashcard(){
     document.getElementById("resposta").value="";
 }
 
+
+
 const botaoTema = document.getElementById("tema");
 
 botaoTema.addEventListener("click", ()=>{
@@ -237,12 +241,10 @@ botaoTema.addEventListener("click", ()=>{
 
 });
 
-let tarefas = [];
+let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 
-function salvar(){
-
+function salvarTarefas(){
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
-
 }
 
 tarefas.push({
@@ -251,7 +253,7 @@ tarefas.push({
 });
 
 
-salvar();
+salvarTarefas();
 
 window.onload = function(){
 
