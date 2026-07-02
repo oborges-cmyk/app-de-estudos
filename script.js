@@ -3,6 +3,7 @@ let tempoInicial = 1500;
 let intervalo = null;
 let pausado = false;
 let xp = Number(localStorage.getItem("xp")) || 0;
+let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 
 const frases = [
 "Pequenos passos levam longe.",
@@ -241,16 +242,10 @@ botaoTema.addEventListener("click", ()=>{
 
 });
 
-let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-
 function salvarTarefas(){
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
-tarefas.push({
-    texto: texto,
-    concluida: false
-});
 
 
 salvarTarefas();
