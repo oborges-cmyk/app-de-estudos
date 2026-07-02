@@ -9,9 +9,12 @@
 <body>
 
 <div class="app">
-
-    <button id="temaBtn" aria-label="Trocar tema" title="Trocar tema">🌙</button>
-    <h1>📚 EstudeJá</h1>
+    <div class="app-header">
+        <button id="menuBtn" aria-label="Abrir menu" title="Menu">☰</button>
+        <h1>📚 EstudeJá</h1>
+        <div id="xpDisplay">XP: <span id="xpValue">0</span></div>
+        <button id="temaBtn" aria-label="Trocar tema" title="Trocar tema">🌙</button>
+    </div>
 
     <p id="frase"></p>
 
@@ -37,6 +40,28 @@
     
     <ul id="lista"></ul>
     
+    </div>
+
+    <div id="arquivo" class="arquivo">
+        <h3>Arquivadas</h3>
+        <ul id="listaArquivo"></ul>
+        <button onclick="limparArquivo()">Limpar arquivo</button>
+    </div>
+
+    <div id="estatisticas" class="estatisticas">
+        <h3>Estatísticas</h3>
+        <p>Total de tarefas: <span id="statTotal">0</span></p>
+        <p>Concluídas: <span id="statFeitas">0</span></p>
+        <p>Taxa de conclusão: <span id="statTaxa">0%</span></p>
+        <p>XP: <span id="statXp">0</span></p>
+        <p>Streak (dias): <span id="statStreak">0</span></p>
+    </div>
+
+    <div id="calendario" class="calendario">
+        <h3>Calendário</h3>
+        <input type="date" id="dataCalendario">
+        <button onclick="mostrarPorData()">Ver</button>
+        <ul id="listaPorData"></ul>
     </div>
 
     <div class="progresso">

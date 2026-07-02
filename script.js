@@ -6,6 +6,8 @@ let xp = Number(localStorage.getItem("xp")) || 0;
 let feitas = 0;
 let total = 0;
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+let arquivo = JSON.parse(localStorage.getItem("arquivo")) || [];
+let calendario = JSON.parse(localStorage.getItem("calendario")) || {};
 
 const frases = [
 "Pequenos passos levam longe.",
@@ -40,12 +42,18 @@ function iniciar(){
 
         atualizarTimer();
 
+
         if(tempo <= 0){
 
             clearInterval(intervalo);
             intervalo = null;
 
-            alert("Tempo encerrado!");
+            alert("Tempo encerrado! Você ganhou 5 XP.");
+            xp += 5;
+            localStorage.setItem("xp", xp);
+            atualizarXpDisplay();
+
+            registrarNoCalendario(new Date(), {tipo: 'pomodoro', xp:5});
 
         }
 
@@ -140,15 +148,17 @@ function renderTarefas(){
 
     tarefas.forEach((t, idx) => {
         const li = document.createElement("li");
-        li.innerHTML = `\n            <span>${t.texto}</span>\n            <button>✓</button>\n        `;
+        li.innerHTML = `\n            <span>${t.texto}</span>\n        `;
 
         if (t.concluida) {
             li.classList.add("concluida");
             feitas++;
         }
 
-        const btn = li.querySelector("button");
+        const btn = document.createElement('button');
+        btn.textContent = '✓';
         btn.onclick = () => {
+            const was = t.concluida;
             t.concluida = !t.concluida;
             if (t.concluida) {
                 li.classList.add("concluida");
@@ -156,10 +166,26 @@ function renderTarefas(){
                 li.classList.remove("concluida");
             }
             feitas = tarefas.filter(x => x.concluida).length;
+            // dar XP apenas quando marcar como concluída
+            if(!was && t.concluida){
+                xp += 10;
+                atualizarXpDisplay();
+                registrarNoCalendario(new Date(), {tipo:'tarefaconcluida', texto: t.texto, xp:10});
+            }
             salvarTarefas();
             atualizarProgresso();
+            atualizarEstatisticas();
         };
 
+        const btnArch = document.createElement('button');
+        btnArch.textContent = '📦';
+        btnArch.title = 'Arquivar';
+        btnArch.onclick = () => {
+            archiveTask(idx);
+        };
+
+        li.appendChild(btn);
+        li.appendChild(btnArch);
         lista.appendChild(li);
     });
 
@@ -242,8 +268,152 @@ document.addEventListener("DOMContentLoaded", () => {
     // atualizar timer e lista
     atualizarTimer();
     renderTarefas();
+    renderArquivo();
+    atualizarXpDisplay();
+    atualizarEstatisticas();
+
+    // menu
+    const menuBtn = document.getElementById('menuBtn');
+    if(menuBtn){
+        menuBtn.addEventListener('click', () => {
+            document.body.classList.toggle('menu-open');
+        });
+    }
+
+    // navegação simples: esconder/mostrar seções por padrão
+    const arquivoEl = document.getElementById('arquivo');
+    const estatEl = document.getElementById('estatisticas');
+    const calEl = document.getElementById('calendario');
+    if(arquivoEl) arquivoEl.style.display = 'none';
+    if(estatEl) estatEl.style.display = 'none';
+    if(calEl) calEl.style.display = 'none';
 });
 
+function atualizarXpDisplay(){
+    const el = document.getElementById('xpValue');
+    if(el) el.textContent = xp;
+    const statXp = document.getElementById('statXp');
+    if(statXp) statXp.textContent = xp;
+}
+
+function salvarTudo(){
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+    localStorage.setItem('arquivo', JSON.stringify(arquivo));
+    localStorage.setItem('calendario', JSON.stringify(calendario));
+    localStorage.setItem('xp', xp);
+}
+
+function archiveTask(index){
+    const item = tarefas.splice(index,1)[0];
+    if(!item) return;
+    const registro = {
+        texto: item.texto,
+        concluida: item.concluida || false,
+        data: new Date().toISOString()
+    };
+    arquivo.push(registro);
+    salvarTudo();
+    renderTarefas();
+    renderArquivo();
+    atualizarEstatisticas();
+}
+
+function renderArquivo(){
+    const ul = document.getElementById('listaArquivo');
+    if(!ul) return;
+    ul.innerHTML = '';
+    arquivo.forEach((a, idx)=>{
+        const li = document.createElement('li');
+        li.textContent = `${a.texto} — ${new Date(a.data).toLocaleString()}`;
+        const btnRestore = document.createElement('button');
+        btnRestore.textContent = 'Restaurar';
+        btnRestore.onclick = ()=>{
+            tarefas.push({texto:a.texto, concluida:a.concluida});
+            arquivo.splice(idx,1);
+            salvarTudo();
+            renderTarefas();
+            renderArquivo();
+            atualizarEstatisticas();
+        };
+        const btnDel = document.createElement('button');
+        btnDel.textContent = 'Excluir';
+        btnDel.onclick = ()=>{
+            if(confirm('Excluir permanentemente?')){
+                arquivo.splice(idx,1);
+                salvarTudo();
+                renderArquivo();
+                atualizarEstatisticas();
+            }
+        };
+        li.appendChild(btnRestore);
+        li.appendChild(btnDel);
+        ul.appendChild(li);
+    });
+}
+
+function limparArquivo(){
+    if(confirm('Limpar todo o arquivo?')){
+        arquivo = [];
+        salvarTudo();
+        renderArquivo();
+        atualizarEstatisticas();
+    }
+}
+
+function atualizarEstatisticas(){
+    const totalT = tarefas.length + arquivo.length;
+    const concl = tarefas.filter(t=>t.concluida).length + arquivo.filter(a=>a.concluida).length;
+    const taxa = totalT>0? Math.round((concl/totalT)*100):0;
+    const elTotal = document.getElementById('statTotal');
+    if(elTotal) elTotal.textContent = totalT;
+    const elFeitas = document.getElementById('statFeitas');
+    if(elFeitas) elFeitas.textContent = concl;
+    const elTaxa = document.getElementById('statTaxa');
+    if(elTaxa) elTaxa.textContent = taxa+'%';
+    const elXp = document.getElementById('statXp');
+    if(elXp) elXp.textContent = xp;
+    const elStreak = document.getElementById('statStreak');
+    if(elStreak) elStreak.textContent = calcularStreak();
+}
+
+function calcularStreak(){
+    const dias = Object.keys(calendario).sort().reverse();
+    if(dias.length===0) return 0;
+    let streak = 0;
+    let hoje = new Date();
+    hoje.setHours(0,0,0,0);
+    for(let i=0;i<dias.length;i++){
+        const d = new Date(dias[i]);
+        d.setHours(0,0,0,0);
+        const diff = Math.round((hoje - d)/(1000*60*60*24));
+        if(diff===streak){
+            streak++;
+        }
+    }
+    return streak;
+}
+
+function registrarNoCalendario(date, entry){
+    const key = new Date(date).toISOString().slice(0,10);
+    if(!calendario[key]) calendario[key]=[];
+    calendario[key].push(entry);
+    salvarTudo();
+}
+
+function mostrarPorData(){
+    const input = document.getElementById('dataCalendario');
+    const key = input.value;
+    const ul = document.getElementById('listaPorData');
+    ul.innerHTML = '';
+    if(!key) return;
+    const itens = calendario[key] || [];
+    itens.forEach(it=>{
+        const li = document.createElement('li');
+        li.textContent = JSON.stringify(it);
+        ul.appendChild(li);
+    });
+}
+
 function salvarTarefas(){
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    salvarTudo();
 }

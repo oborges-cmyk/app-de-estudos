@@ -30,6 +30,19 @@
     color:black;
     transition:.4s;
        }
+
+.app-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:space-between;
+}
+
+#xpDisplay{
+    background:#f1f5f9;
+    padding:6px 10px;
+    border-radius:8px;
+}
     
     body.dark-mode .app{
         background:#2b2b2b;
@@ -163,3 +176,35 @@ body.dark-mode .barra{
         align-self:flex-end;
         margin-bottom:10px;
     }
+
+.menu-open .arquivo,
+.menu-open .estatisticas,
+.menu-open .calendario{
+    display:block !important;
+}
+
+.arquivo, .estatisticas, .calendario{
+    margin-top:20px;
+    padding:10px;
+    background:#fff;
+    border-radius:8px;
+}
+
+.arquivo button, .estatisticas button, .calendario button{
+    margin-top:8px;
+}
+
+/* Dark mode adjustments for new sections */
+body.dark-mode .arquivo,
+body.dark-mode .estatisticas,
+body.dark-mode .calendario{
+    background:#2b2b2b;
+    color:#ffffff;
+}
+
+body.dark-mode .arquivo button,
+body.dark-mode .estatisticas button,
+body.dark-mode .calendario button{
+    background:#4f7cff;
+    color:#ffffff;
+}
