@@ -21,7 +21,8 @@
     .app{
     background:white;
     padding:30px;
-    width:450px;
+    width:90%;
+    max-width:450px;
     border-radius:20px;
     box-shadow:0 0 20px rgba(0,0,0,.2);
     display:flex;
@@ -118,17 +119,12 @@ body.dark .barra{
     width:0%;
     background:#22c55e;
     transition:.4s;
-    
+     }
     
     #frase{
     margin-top:20px;
     text-align:center;
     font-style:italic;
-    }
-
-    .escuro{
-        background:#121212;
-        color:white;
     }
 
     .flashcards{
@@ -157,8 +153,13 @@ body.dark .barra{
         margin-bottom:10px;
     }
     
-   .resposta{
+  .resposta{
         display:none;
         color:#2563eb;
         font-weight:bold;
       }
+
+      #tema{
+        align-self:flex-end;
+        margin-bottom:10px;
+    }
