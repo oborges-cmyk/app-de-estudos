@@ -9,8 +9,7 @@ const frases = [
 "Estude hoje para agradecer amanhã.",
 "Consistência vence talento.",
 "Cada página lida é progresso.",
-"Você está mais perto do que ontem.",
-'JUST DO IT'
+"Você está mais perto do que ontem."
 ];
 
 document.getElementById("frase").textContent =

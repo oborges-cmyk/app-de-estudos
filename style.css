@@ -157,8 +157,8 @@ body.dark .barra{
         margin-bottom:10px;
     }
     
-    .resposta{
+   .resposta{
         display:none;
         color:#2563eb;
         font-weight:bold;
-    }
+      }
