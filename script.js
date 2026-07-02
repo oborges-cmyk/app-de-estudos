@@ -2,7 +2,6 @@ let tempo = 1500;
 let tempoInicial = 1500;
 let intervalo = null;
 let pausado = false;
-let texto = 0;
 let xp = Number(localStorage.getItem("xp")) || 0;
 let feitas = 0;
 let total = 0;
@@ -116,34 +115,55 @@ function modo5010(){
 }
 
 function adicionar(){
+    const texto = document.getElementById("tarefa").value.trim();
 
-const texto =
-document.getElementById("tarefa").value;
+    if (texto === "") return;
 
-if(texto==="") return;
+    const item = {
+        texto: texto,
+        concluida: false
+    };
 
-const li = document.createElement("li");
+    tarefas.push(item);
+    salvarTarefas();
 
-li.innerHTML=`
-<span>${texto}</span>
-<button>✓</button>
-`;
+    renderTarefas();
 
-const btn = li.querySelector("button");
-
-btn.onclick=()=>{
-
-if(!li.classList.contains("concluida")){
-li.classList.add("concluida");
-feitas++;
-atualizarProgresso();
+    document.getElementById("tarefa").value = "";
 }
-};
 
-document.getElementById("lista")
-.appendChild(li);
+function renderTarefas(){
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+    feitas = 0;
+    total = tarefas.length;
 
-document.getElementById("tarefa").value="";
+    tarefas.forEach((t, idx) => {
+        const li = document.createElement("li");
+        li.innerHTML = `\n            <span>${t.texto}</span>\n            <button>✓</button>\n        `;
+
+        if (t.concluida) {
+            li.classList.add("concluida");
+            feitas++;
+        }
+
+        const btn = li.querySelector("button");
+        btn.onclick = () => {
+            t.concluida = !t.concluida;
+            if (t.concluida) {
+                li.classList.add("concluida");
+            } else {
+                li.classList.remove("concluida");
+            }
+            feitas = tarefas.filter(x => x.concluida).length;
+            salvarTarefas();
+            atualizarProgresso();
+        };
+
+        lista.appendChild(li);
+    });
+
+    atualizarProgresso();
 }
 
 function atualizarProgresso(){
@@ -205,34 +225,25 @@ function criarFlashcard(){
 }
 
 
-// script.js
+// Inicialização
 document.addEventListener("DOMContentLoaded", () => {
     const temaBtn = document.getElementById("temaBtn");
 
+    // carregar tema salvo (usa a classe 'dark-mode')
+    if (localStorage.getItem("tema") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
     temaBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
+        localStorage.setItem("tema", document.body.classList.contains("dark-mode"));
     });
+
+    // atualizar timer e lista
+    atualizarTimer();
+    renderTarefas();
 });
 
-if(localStorage.getItem("tema")=="true"){
-
-    document.body.classList.add("dark");
-
-}
-
-localStorage.setItem(
-    "tema",
-    document.body.classList.contains("dark")
-    );
 function salvarTarefas(){
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
-
-tarefas.push({
-
-    texto:texto,
-    concluida:false
-
-});
-
-salvarTarefas();
